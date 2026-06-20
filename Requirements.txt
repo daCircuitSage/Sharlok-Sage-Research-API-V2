@@ -1,0 +1,77 @@
+# =========================
+# LangChain Ecosystem
+# =========================
+langchain
+langchain-core
+langchain-community
+langchain-mistralai
+langgraph
+
+# =========================
+# Mistral AI
+# =========================
+mistralai
+
+# =========================
+# Search
+# =========================
+tavily-python
+
+# =========================
+# Environment Variables
+# =========================
+python-dotenv
+
+# =========================
+# HTTP Requests
+# =========================
+requests
+aiohttp
+
+# =========================
+# Web Scraping
+# =========================
+beautifulsoup4
+lxml
+html5lib
+playwright
+
+# =========================
+# Data Validation
+# =========================
+pydantic
+
+# =========================
+# Embeddings & Deduplication
+# =========================
+sentence-transformers
+numpy
+scikit-learn
+
+# =========================
+# Token Counting
+# =========================
+tiktoken
+
+# =========================
+# Retry & Utilities
+# =========================
+tenacity
+orjson
+
+# =========================
+# Logging & CLI
+# =========================
+rich
+tqdm
+
+# =========================
+# PDF Export
+# =========================
+reportlab
+markdown
+
+# =========================
+# Optional (Recommended)
+# =========================
+qdrant-client

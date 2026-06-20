@@ -1,0 +1,210 @@
+from langchain.agents import create_agent
+from langchain_mistralai import ChatMistralAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from tools import *
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+llm = ChatMistralAI(model = "mistral-small-2506", temperature=0)
+
+
+
+
+def planner_agent():
+    agent = create_agent(model=llm,
+                         tools=[web_search,web_scraper])
+    
+    return agent
+
+planner_prompt = """
+You are a research planner.
+
+Your job is to break a user query into 5–8 clear research subtopics.
+
+Rules:
+- Make subtopics specific and researchable
+- Cover different angles (causes, effects, data, opinions, trends)
+- Do NOT answer the question
+
+Return only a Python list of subtopics.
+
+Topic: {topic}
+"""
+
+planner_chain = planner_prompt | llm | StrOutputParser()
+
+
+def query_generator_agent():
+    agent = create_agent(model=llm,
+                         tools=[web_search,web_scraper])
+    
+    return agent
+
+
+query_prompt = """
+You are a web search expert.
+
+For each subtopic, generate 3–5 high-quality search queries.
+
+Rules:
+- Include keywords like: report, statistics, analysis, data
+- Avoid repetition
+- Make queries diverse
+
+Subtopic: {subtopic}
+
+Return only a list of search queries.
+"""
+
+query_generator_chain = query_prompt | llm | StrOutputParser()
+
+
+
+def parallel_searchlayer_agent():
+    agent = create_agent(
+        model=llm,
+        tools=[web_search]
+    )
+
+    return agent
+
+synth_prompt = """
+You are a research analyst.
+
+You are given multiple scraped documents.
+
+Your job:
+- Extract key facts
+- Group similar information
+- Remove noise
+- Identify contradictions
+
+Rules:
+- Only use provided data
+- Do NOT add external knowledge
+
+Data:
+{documents}
+"""
+
+parallel_searchlayer_chain = synth_prompt | llm | StrOutputParser()
+
+
+def document_collection():
+    agent = create_agent(
+        model = llm,
+        tools=[web_scraper]
+    )
+    return agent
+
+
+
+writer_prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        """
+You are a senior research analyst and professional report writer.
+
+Your job is to write accurate, structured, and fact-based research reports ONLY using the provided research data.
+
+Rules:
+- Do NOT use external knowledge.
+- Do NOT invent facts or sources.
+- If information is missing, explicitly mention uncertainty.
+- Prioritize factual accuracy over creativity.
+"""
+    ),
+    (
+        "human",
+        """
+Write a detailed research report on the topic below.
+
+Topic:
+{topic}
+
+Research Data:
+{research}
+
+Report Structure:
+
+1. Introduction
+- Brief overview of the topic
+
+2. Key Findings (minimum 3 points)
+- Each point must be supported by research data
+- Explain clearly and analytically
+
+3. Contradictions / Conflicting Information (if any)
+- Mention differences between sources
+
+4. Conclusion
+- Summarize insights based only on provided data
+
+5. Sources
+- Extract and list all URLs from research
+- Do NOT fabricate any sources
+
+Be professional, analytical, and strictly factual.
+"""
+    ),
+])
+
+writer_chain = writer_prompt | llm | StrOutputParser()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+critic_prompt = """
+You are a strict research critic.
+
+Evaluate the report for:
+
+1. Factual accuracy
+2. Completeness
+3. Clarity
+4. Missing information
+
+Report:
+{report}
+
+Return:
+Score (0-10)
+Strengths
+Weaknesses
+Improvements
+"""
+
+
+
