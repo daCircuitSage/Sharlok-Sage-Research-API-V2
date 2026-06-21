@@ -1,5 +1,5 @@
 from agents import build_final_report, source_collector, source_researcher
-
+from rich import print
 
 def run_research_pipeline(topic: str) -> dict:
     print("\n" + "=" * 60)

@@ -75,3 +75,14 @@ markdown
 # Optional (Recommended)
 # =========================
 qdrant-client
+
+
+
+# =========================
+# Backend Development Dep(Django/DRF)
+# =========================
+
+django
+djangorestframework
+django-cors-headers
+python-decouple
