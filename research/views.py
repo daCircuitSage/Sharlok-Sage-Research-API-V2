@@ -4,6 +4,8 @@ from rest_framework import status
 
 from rest_framework.views import APIView
 
+from rest_framework.permissions import IsAuthenticated
+
 from .serializers import (ResearchRequestSerializer,
                           ResearchResponseSerializer)
 from .models import ResearchResults
@@ -12,6 +14,7 @@ from .service import run_research_for_topic
 
 
 class ResearchCreateView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = ResearchRequestSerializer(data=request.data)
         if not serializer.is_valid(raise_exception=True):
@@ -21,7 +24,7 @@ class ResearchCreateView(APIView):
         result = run_research_for_topic(topic=topic)
 
         research_obj = ResearchResults.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=request.user,
             topic = result['topic'],
             report=result['report'],
             confidence=result['confidence'],

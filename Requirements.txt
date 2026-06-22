@@ -86,3 +86,7 @@ django
 djangorestframework
 django-cors-headers
 python-decouple
+
+#authentication 
+djangorestframework_simplejwt==5.5.1
+google-auth==2.55.0
